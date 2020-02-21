@@ -1,10 +1,12 @@
-	AREA	reset, CODE, READONLY
-	
-;	AREA	AsmTemplate, CODE, READONLY
-;	IMPORT	main
+	AREA	AsmTemplate, CODE, READONLY
+	IMPORT	main
 
-; sample program makes the 4 LEDs P1.16, P1.17, P1.18, P1.19 go on and off in sequence
+; skeleton code: sample program makes the 4 LEDs P1.16, P1.17, P1.18, P1.19 go on and off in sequence
 ; (c) Mike Brady, 2011 -- 2019.
+
+; program
+; Yi Xiang Tan AKA dabreadman
+; Does some simple calculation using P1.20-P1.23 buttons and display result using P1.16-P1.19 LEDS
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  	EXPORT	start
 start
@@ -12,11 +14,6 @@ IO1DIR	EQU	0xE0028018
 IO1SET	EQU	0xE0028014
 IO1CLR	EQU	0xE002801C
 IO1PIN  EQU 0xE0028010
-	
-;	TODO
-; 	get decimal representation from hex
-;   get binary representation using TABLE
-; 	calls flash subroutine
 
 ini
 		ldr r4,=0	; sum
@@ -74,7 +71,7 @@ b21
 		cmp r0,#21		; if P21 +
 		bne ini
 		ldr r6,=1		; set op = +
-		b endloop]
+		b endloop
 		
 
 endloop
