@@ -1,7 +1,7 @@
-;	AREA	reset, CODE, READONLY
+	AREA	reset, CODE, READONLY
 	
-	AREA	AsmTemplate, CODE, READONLY
-	IMPORT	main
+;	AREA	AsmTemplate, CODE, READONLY
+;	IMPORT	main
 
 ; sample program makes the 4 LEDs P1.16, P1.17, P1.18, P1.19 go on and off in sequence
 ; (c) Mike Brady, 2011 -- 2019.
@@ -24,6 +24,7 @@ inic
 		ldr r5,=0	; cur 
 		ldr r6,=1	; operator
 		ldr r7,=0	; temp 
+		
 		ldr r0,=0
 		bl flash
 loop	
@@ -32,7 +33,7 @@ loop
 		
 bn20	cmp r0,#-20	; if long P20 clearall
 		bne bn21	
-		b ini
+		b start
 bn21	cmp r0,#-21	; if long P21 clear last
 		bne b22
 		b inic
@@ -73,7 +74,7 @@ b21
 		cmp r0,#21		; if P21 +
 		bne ini
 		ldr r6,=1		; set op = +
-		b endloop
+		b endloop]
 		
 
 endloop
@@ -119,6 +120,13 @@ nset	mov r3,r3,lsr #1
 ds
 		POP {r3-r6,pc}
 
+;	button subroutine
+;	return index of button pressed, negative if long pressed
+; 	parameter: 
+; 	none
+;	output:
+;	
+;
 button 
 	PUSH{r4-r5,LR}
 buttonIni

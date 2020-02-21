@@ -4,10 +4,10 @@
 ARM Macro Assembler    Page 1 
 
 
-    1 00000000         ; AREA reset, CODE, READONLY
+    1 00000000                 AREA             reset, CODE, READONLY
     2 00000000         
-    3 00000000                 AREA             AsmTemplate, CODE, READONLY
-    4 00000000                 IMPORT           main
+    3 00000000         ; AREA AsmTemplate, CODE, READONLY
+    4 00000000         ; IMPORT main
     5 00000000         
     6 00000000         ; sample program makes the 4 LEDs P1.16, P1.17, P1.18, P
                        1.19 go on and off in sequence
@@ -35,206 +35,207 @@ ARM Macro Assembler    Page 1
    24 00000004 E3A05000        ldr              r5,=0       ; cur 
    25 00000008 E3A06001        ldr              r6,=1       ; operator
    26 0000000C E3A07000        ldr              r7,=0       ; temp 
-   27 00000010 E3A00000        ldr              r0,=0
-   28 00000014 EB000027        bl               flash
-   29 00000018         loop
-   30 00000018 EB00003A        bl               button      ; get input
-   31 0000001C         
+   27 00000010         
+   28 00000010 E3A00000        ldr              r0,=0
+   29 00000014 EB000027        bl               flash
+   30 00000018         loop
+   31 00000018 EB00003A        bl               button      ; get input
    32 0000001C         
-   33 0000001C E3700014 
+   33 0000001C         
+   34 0000001C E3700014 
                        bn20    cmp              r0,#-20     ; if long P20 clear
                                                             all
-   34 00000020 1A000000        bne              bn21
-   35 00000024 EAFFFFF5        b                ini
-   36 00000028 E3700015 
+   35 00000020 1A000000        bne              bn21
+   36 00000024 EAFFFFFE        b                start
+   37 00000028 E3700015 
                        bn21    cmp              r0,#-21     ; if long P21 clear
                                                              last
-   37 0000002C 1A000000        bne              b22
-   38 00000030 EAFFFFF3        b                inic
-   39 00000034         
-   40 00000034 E3500016 
+   38 0000002C 1A000000        bne              b22
+   39 00000030 EAFFFFF3        b                inic
+   40 00000034         
+   41 00000034 E3500016 
                        b22     cmp              r0,#22      ; if P22 n-
-   41 00000038 1A000002        bne              b23
-   42 0000003C E2455001        sub              r5,r5,#1    ; n-
-   43 00000040 E1A07005        mov              r7,r5       ; get cur into r0 f
+   42 00000038 1A000002        bne              b23
+   43 0000003C E2455001        sub              r5,r5,#1    ; n-
+   44 00000040 E1A07005        mov              r7,r5       ; get cur into r0 f
                                                             or display
-   44 00000044 EA000017        b                endloop
-   45 00000048         
-   46 00000048 E3500017 
+   45 00000044 EA000017        b                endloop
+   46 00000048         
+   47 00000048 E3500017 
                        b23     cmp              r0,#23      ; if P23 n+
-   47 0000004C 1A000002        bne              subtract
 
 
 
 ARM Macro Assembler    Page 2 
 
 
-   48 00000050 E2855001        add              r5,r5,#1    ; n+
-   49 00000054 E1A07005        mov              r7,r5       ; get cur into r0 f
+   48 0000004C 1A000002        bne              subtract
+   49 00000050 E2855001        add              r5,r5,#1    ; n+
+   50 00000054 E1A07005        mov              r7,r5       ; get cur into r0 f
                                                             or display
-   50 00000058 EA000012        b                endloop
-   51 0000005C         
-   52 0000005C         subtract
-   53 0000005C E3560002        cmp              r6,#2       ; if P20 -
-   54 00000060 1A000003        bne              plus
-   55 00000064 E0444005        sub              r4,r4,r5    ; sum-=cur
-   56 00000068 E1A07004        mov              r7,r4       ; mov for display
-   57 0000006C E3A05000        ldr              r5,=0       ; clear cur
-   58 00000070 EA000004        b                b20
-   59 00000074         
-   60 00000074         plus
-   61 00000074 E3560001        cmp              r6,#1       ; if P21 +
-   62 00000078 1A000002        bne              b20
-   63 0000007C E0844005        add              r4,r4,r5    ; sum+=cur
-   64 00000080 E1A07004        mov              r7,r4       ; mov for display
-   65 00000084 E3A05000        ldr              r5,=0       ; clear cur
-   66 00000088         
-   67 00000088         b20
-   68 00000088 E3500014        cmp              r0,#20      ; if P20 -
-   69 0000008C 1A000001        bne              b21
-   70 00000090 E3A06002        ldr              r6,=2       ; set op = -
-   71 00000094 EA000003        b                endloop
-   72 00000098         b21
-   73 00000098 E3500015        cmp              r0,#21      ; if P21 +
-   74 0000009C 1AFFFFD7        bne              ini
-   75 000000A0 E3A06001        ldr              r6,=1       ; set op = +
-   76 000000A4 EAFFFFFF        b                endloop
-   77 000000A8         
+   51 00000058 EA000012        b                endloop
+   52 0000005C         
+   53 0000005C         subtract
+   54 0000005C E3560002        cmp              r6,#2       ; if P20 -
+   55 00000060 1A000003        bne              plus
+   56 00000064 E0444005        sub              r4,r4,r5    ; sum-=cur
+   57 00000068 E1A07004        mov              r7,r4       ; mov for display
+   58 0000006C E3A05000        ldr              r5,=0       ; clear cur
+   59 00000070 EA000004        b                b20
+   60 00000074         
+   61 00000074         plus
+   62 00000074 E3560001        cmp              r6,#1       ; if P21 +
+   63 00000078 1A000002        bne              b20
+   64 0000007C E0844005        add              r4,r4,r5    ; sum+=cur
+   65 00000080 E1A07004        mov              r7,r4       ; mov for display
+   66 00000084 E3A05000        ldr              r5,=0       ; clear cur
+   67 00000088         
+   68 00000088         b20
+   69 00000088 E3500014        cmp              r0,#20      ; if P20 -
+   70 0000008C 1A000001        bne              b21
+   71 00000090 E3A06002        ldr              r6,=2       ; set op = -
+   72 00000094 EA000003        b                endloop
+   73 00000098         b21
+   74 00000098 E3500015        cmp              r0,#21      ; if P21 +
+   75 0000009C 1AFFFFD7        bne              ini
+   76 000000A0 E3A06001        ldr              r6,=1       ; set op = +
+   77 000000A4 EAFFFFFF        b                endloop
    78 000000A8         
-   79 000000A8         endloop
-   80 000000A8 E1A00007        mov              r0,r7
-   81 000000AC EB000001        bl               flash
-   82 000000B0 EAFFFFD8        b                loop
-   83 000000B4 EAFFFFFE 
+   79 000000A8         
+   80 000000A8         endloop
+   81 000000A8 E1A00007        mov              r0,r7
+   82 000000AC EB000001        bl               flash
+   83 000000B0 EAFFFFD8        b                loop
+   84 000000B4 EAFFFFFE 
                        stop    B                stop
-   84 000000B8         
    85 000000B8         
-   86 000000B8         ;
-   87 000000B8         ; flash subroutine
-   88 000000B8         ; Show the binary representation with LED flashing 
-   89 000000B8         ; parameter: 
-   90 000000B8         ;  R0: binary representation
-   91 000000B8         ; output:
-   92 000000B8         ;  none
-   93 000000B8         
-   94 000000B8 E92D4078 
+   86 000000B8         
+   87 000000B8         ;
+   88 000000B8         ; flash subroutine
+   89 000000B8         ; Show the binary representation with LED flashing 
+   90 000000B8         ; parameter: 
+   91 000000B8         ;  R0: binary representation
+   92 000000B8         ; output:
+   93 000000B8         ;  none
+   94 000000B8         
+   95 000000B8 E92D4078 
                        flash   PUSH             {r3-r6,lr}
-   95 000000BC E59F10F4        ldr              r1,=IO1DIR
-   96 000000C0 E3A0280F        ldr              r2,=0x000f0000 ;select P1.19--P
+   96 000000BC E59F10F4        ldr              r1,=IO1DIR
+   97 000000C0 E3A0280F        ldr              r2,=0x000f0000 ;select P1.19--P
                                                             1.16
-   97 000000C4 E5812000        str              r2,[r1]     ;make them outputs
-   98 000000C8 E59F10EC        ldr              r1,=IO1SET
-   99 000000CC E5812000        str              r2,[r1]     ;set them to turn t
+   98 000000C4 E5812000        str              r2,[r1]     ;make them outputs
+   99 000000C8 E59F10EC        ldr              r1,=IO1SET
+  100 000000CC E5812000        str              r2,[r1]     ;set them to turn t
                                                             he LEDs off
-  100 000000D0 E59F20E8        ldr              r2,=IO1CLR
-  101 000000D4         ; r1 points to the SET register
+  101 000000D0 E59F20E8        ldr              r2,=IO1CLR
 
 
 
 ARM Macro Assembler    Page 3 
 
 
-  102 000000D4         ; r2 points to the CLEAR register
-  103 000000D4         
+  102 000000D4         ; r1 points to the SET register
+  103 000000D4         ; r2 points to the CLEAR register
   104 000000D4         
-  105 000000D4 E3A05702        ldr              r5,=0x000080000 ; end when the 
+  105 000000D4         
+  106 000000D4 E3A05702        ldr              r5,=0x000080000 ; end when the 
                                                             mask reaches this v
                                                             alue
-  106 000000D8         
-  107 000000D8 E3A03702 
+  107 000000D8         
+  108 000000D8 E3A03702 
                        fs      ldr              r3,=0x000080000 
                                                             ; start with P1.16.
                                                             
-  108 000000DC E3A06000 
+  109 000000DC E3A06000 
                        floop   ldr              r6,=0
-  109 000000E0 E3500000        cmp              r0,#0
-  110 000000E4 0A000006        beq              ds
-  111 000000E8 E1B000A0        movs             r0,r0,lsr #1
-  112 000000EC E2A66000        adc              r6,r6,#0
-  113 000000F0 E3560000        cmp              r6,#0
-  114 000000F4 0A000000        beq              nset
-  115 000000F8 E5823000        str              r3,[r2]     ; clear the bit -> 
+  110 000000E0 E3500000        cmp              r0,#0
+  111 000000E4 0A000006        beq              ds
+  112 000000E8 E1B000A0        movs             r0,r0,lsr #1
+  113 000000EC E2A66000        adc              r6,r6,#0
+  114 000000F0 E3560000        cmp              r6,#0
+  115 000000F4 0A000000        beq              nset
+  116 000000F8 E5823000        str              r3,[r2]     ; clear the bit -> 
                                                             turn on the LED
-  116 000000FC E1A030A3 
+  117 000000FC E1A030A3 
                        nset    mov              r3,r3,lsr #1
-  117 00000100 EAFFFFF5        b                floop
-  118 00000104         
-  119 00000104         ds
-  120 00000104 E8BD8078        POP              {r3-r6,pc}
-  121 00000108         
-  122 00000108         button
-  123 00000108 E92D4030        PUSH{r4-r5,LR}
-  124 0000010C         buttonIni
-  125 0000010C E59F20B0        ldr              r2,=IO1PIN  ; get mem address
-  126 00000110 E3A03000        ldr              r3,=0       ; nothing
-  127 00000114 E3A04000        ldr              r4,=0       ;
-  128 00000118         buttonRead
-  129 00000118 E5920000        ldr              r0,[r2]     ; get memory
-  130 0000011C         buttonGetBits
-  131 0000011C E1E00000        mvn              r0,r0
-  132 00000120 E1A00A20        lsr              r0,#20      ; right shift 20
-  133 00000124 E3A0100F        ldr              r1,=0xF     ; mask
-  134 00000128 E0000001        and              r0,r1       ; get bits
-  135 0000012C E3500000        cmp              r0,#0       ; if has input
-  136 00000130 0A00000B        beq              butNoIn
-  137 00000134 E3540001        cmp              r4,#1       ; if already presse
+  118 00000100 EAFFFFF5        b                floop
+  119 00000104         
+  120 00000104         ds
+  121 00000104 E8BD8078        POP              {r3-r6,pc}
+  122 00000108         
+  123 00000108         button
+  124 00000108 E92D4030        PUSH{r4-r5,LR}
+  125 0000010C         buttonIni
+  126 0000010C E59F20B0        ldr              r2,=IO1PIN  ; get mem address
+  127 00000110 E3A03000        ldr              r3,=0       ; nothing
+  128 00000114 E3A04000        ldr              r4,=0       ;
+  129 00000118         buttonRead
+  130 00000118 E5920000        ldr              r0,[r2]     ; get memory
+  131 0000011C         buttonGetBits
+  132 0000011C E1E00000        mvn              r0,r0
+  133 00000120 E1A00A20        lsr              r0,#20      ; right shift 20
+  134 00000124 E3A0100F        ldr              r1,=0xF     ; mask
+  135 00000128 E0000001        and              r0,r1       ; get bits
+  136 0000012C E3500000        cmp              r0,#0       ; if has input
+  137 00000130 0A00000B        beq              butNoIn
+  138 00000134 E3540001        cmp              r4,#1       ; if already presse
                                                             d
-  138 00000138 DA000003        ble              butNew
-  139 0000013C E1530000        cmp              r3,r0       ; if input same
-  140 00000140 1A000009        bne              finDiff
-  141 00000144 E3A04008        ldr              r4,=8
-  142 00000148 EA000008        b                fin
-  143 0000014C         
-  144 0000014C         butNew
-  145 0000014C E1A03000        mov              r3,r0       ; store copy
-  146 00000150 E2844001        add              r4,r4,#1    ; add counter
-  147 00000154         
-  148 00000154 E59F506C 
+  139 00000138 DA000003        ble              butNew
+  140 0000013C E1530000        cmp              r3,r0       ; if input same
+  141 00000140 1A000009        bne              finDiff
+  142 00000144 E3A04008        ldr              r4,=8
+  143 00000148 EA000008        b                fin
+  144 0000014C         
+  145 0000014C         butNew
+  146 0000014C E1A03000        mov              r3,r0       ; store copy
+  147 00000150 E2844001        add              r4,r4,#1    ; add counter
+  148 00000154         
+  149 00000154 E59F506C 
                        wait    ldr              r5,=4000000
-  149 00000158 E2555001 
-                       waitl   subs             r5,r5,#1
+  150 00000158 E2555001 
 
 
 
 ARM Macro Assembler    Page 4 
 
 
-  150 0000015C 1AFFFFFD        bne              waitl
-  151 00000160 EAFFFFEC        b                buttonRead
-  152 00000164         
-  153 00000164         butNoIn
-  154 00000164 E3540000        cmp              r4,#0       ; if already have i
+                       waitl   subs             r5,r5,#1
+  151 0000015C 1AFFFFFD        bne              waitl
+  152 00000160 EAFFFFEC        b                buttonRead
+  153 00000164         
+  154 00000164         butNoIn
+  155 00000164 E3540000        cmp              r4,#0       ; if already have i
                                                             nput
-  155 00000168 0AFFFFE7        beq              buttonIni
-  156 0000016C         
-  157 0000016C         finDiff
-  158 0000016C E1A00003        mov              r0,r3
-  159 00000170         fin
-  160 00000170 E3500001        cmp              r0,#0x1     ; if P.20
-  161 00000174 1A000000        bne              P21
-  162 00000178 E3A00014        ldr              r0,=20
-  163 0000017C E3500002 
+  156 00000168 0AFFFFE7        beq              buttonIni
+  157 0000016C         
+  158 0000016C         finDiff
+  159 0000016C E1A00003        mov              r0,r3
+  160 00000170         fin
+  161 00000170 E3500001        cmp              r0,#0x1     ; if P.20
+  162 00000174 1A000000        bne              P21
+  163 00000178 E3A00014        ldr              r0,=20
+  164 0000017C E3500002 
                        P21     cmp              r0,#0x2     ; if P.21
-  164 00000180 1A000000        bne              P22
-  165 00000184 E3A00015        ldr              r0,=21
-  166 00000188         ;b buttonIn
-  167 00000188 E3500004 
+  165 00000180 1A000000        bne              P22
+  166 00000184 E3A00015        ldr              r0,=21
+  167 00000188         ;b buttonIn
+  168 00000188 E3500004 
                        P22     cmp              r0,#0x4     ; if P.22
-  168 0000018C 1A000000        bne              P23
-  169 00000190 E3A00016        ldr              r0,=22
-  170 00000194 E3500008 
+  169 0000018C 1A000000        bne              P23
+  170 00000190 E3A00016        ldr              r0,=22
+  171 00000194 E3500008 
                        P23     cmp              r0,#0x8     ; if P.23
-  171 00000198 1A000000        bne              checklong
-  172 0000019C E3A00017        ldr              r0,=23
-  173 000001A0         checklong
-  174 000001A0 E3540008        cmp              r4,#8
-  175 000001A4 BA000000        blt              endBut
-  176 000001A8 E2600000        neg              r0,r0
-  177 000001AC         endBut
-  178 000001AC E3500000        cmp              r0,#0
-  179 000001B0 0AFFFFD5        beq              buttonIni
-  180 000001B4 E8BD8030        POP              {r4-r5,PC}
-  181 000001B8                 END
+  172 00000198 1A000000        bne              checklong
+  173 0000019C E3A00017        ldr              r0,=23
+  174 000001A0         checklong
+  175 000001A0 E3540008        cmp              r4,#8
+  176 000001A4 BA000000        blt              endBut
+  177 000001A8 E2600000        neg              r0,r0
+  178 000001AC         endBut
+  179 000001AC E3500000        cmp              r0,#0
+  180 000001B0 0AFFFFD5        beq              buttonIni
+  181 000001B4 E8BD8030        POP              {r4-r5,PC}
+  182 000001B8                 END
               E0028018 
               E0028014 
               E002801C 
@@ -250,64 +251,64 @@ il_v5\ARM\Inc\Philips --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Relocatable symbols
 
-AsmTemplate 00000000
-
-Symbol: AsmTemplate
-   Definitions
-      At line 3 in file App.s
-   Uses
-      None
-Comment: AsmTemplate unused
 P21 0000017C
 
 Symbol: P21
    Definitions
-      At line 163 in file App.s
+      At line 164 in file App.s
    Uses
-      At line 161 in file App.s
+      At line 162 in file App.s
 Comment: P21 used once
 P22 00000188
 
 Symbol: P22
    Definitions
-      At line 167 in file App.s
+      At line 168 in file App.s
    Uses
-      At line 164 in file App.s
+      At line 165 in file App.s
 Comment: P22 used once
 P23 00000194
 
 Symbol: P23
    Definitions
-      At line 170 in file App.s
+      At line 171 in file App.s
    Uses
-      At line 168 in file App.s
+      At line 169 in file App.s
 Comment: P23 used once
 b20 00000088
 
 Symbol: b20
    Definitions
-      At line 67 in file App.s
+      At line 68 in file App.s
    Uses
-      At line 58 in file App.s
-      At line 62 in file App.s
+      At line 59 in file App.s
+      At line 63 in file App.s
 
 b21 00000098
 
 Symbol: b21
    Definitions
-      At line 72 in file App.s
+      At line 73 in file App.s
    Uses
-      At line 69 in file App.s
+      At line 70 in file App.s
 Comment: b21 used once
 b22 00000034
 
 Symbol: b22
    Definitions
-      At line 40 in file App.s
+      At line 41 in file App.s
    Uses
-      At line 37 in file App.s
+      At line 38 in file App.s
 Comment: b22 used once
 b23 00000048
+
+Symbol: b23
+   Definitions
+      At line 47 in file App.s
+   Uses
+      At line 42 in file App.s
+Comment: b23 used once
+bn20 0000001C
 
 
 
@@ -315,17 +316,9 @@ b23 00000048
 ARM Macro Assembler    Page 2 Alphabetic symbol ordering
 Relocatable symbols
 
-Symbol: b23
-   Definitions
-      At line 46 in file App.s
-   Uses
-      At line 41 in file App.s
-Comment: b23 used once
-bn20 0000001C
-
 Symbol: bn20
    Definitions
-      At line 33 in file App.s
+      At line 34 in file App.s
    Uses
       None
 Comment: bn20 unused
@@ -333,39 +326,39 @@ bn21 00000028
 
 Symbol: bn21
    Definitions
-      At line 36 in file App.s
+      At line 37 in file App.s
    Uses
-      At line 34 in file App.s
+      At line 35 in file App.s
 Comment: bn21 used once
 butNew 0000014C
 
 Symbol: butNew
    Definitions
-      At line 144 in file App.s
+      At line 145 in file App.s
    Uses
-      At line 138 in file App.s
+      At line 139 in file App.s
 Comment: butNew used once
 butNoIn 00000164
 
 Symbol: butNoIn
    Definitions
-      At line 153 in file App.s
+      At line 154 in file App.s
    Uses
-      At line 136 in file App.s
+      At line 137 in file App.s
 Comment: butNoIn used once
 button 00000108
 
 Symbol: button
    Definitions
-      At line 122 in file App.s
+      At line 123 in file App.s
    Uses
-      At line 30 in file App.s
+      At line 31 in file App.s
 Comment: button used once
 buttonGetBits 0000011C
 
 Symbol: buttonGetBits
    Definitions
-      At line 130 in file App.s
+      At line 131 in file App.s
    Uses
       None
 Comment: buttonGetBits unused
@@ -373,71 +366,79 @@ buttonIni 0000010C
 
 Symbol: buttonIni
    Definitions
-      At line 124 in file App.s
+      At line 125 in file App.s
+   Uses
+      At line 156 in file App.s
+      At line 180 in file App.s
+
+buttonRead 00000118
+
+Symbol: buttonRead
+   Definitions
 
 
 
 ARM Macro Assembler    Page 3 Alphabetic symbol ordering
 Relocatable symbols
 
+      At line 129 in file App.s
    Uses
-      At line 155 in file App.s
-      At line 179 in file App.s
-
-buttonRead 00000118
-
-Symbol: buttonRead
-   Definitions
-      At line 128 in file App.s
-   Uses
-      At line 151 in file App.s
+      At line 152 in file App.s
 Comment: buttonRead used once
 checklong 000001A0
 
 Symbol: checklong
    Definitions
-      At line 173 in file App.s
+      At line 174 in file App.s
    Uses
-      At line 171 in file App.s
+      At line 172 in file App.s
 Comment: checklong used once
 ds 00000104
 
 Symbol: ds
    Definitions
-      At line 119 in file App.s
+      At line 120 in file App.s
    Uses
-      At line 110 in file App.s
+      At line 111 in file App.s
 Comment: ds used once
 endBut 000001AC
 
 Symbol: endBut
    Definitions
-      At line 177 in file App.s
+      At line 178 in file App.s
    Uses
-      At line 175 in file App.s
+      At line 176 in file App.s
 Comment: endBut used once
 endloop 000000A8
 
 Symbol: endloop
    Definitions
-      At line 79 in file App.s
+      At line 80 in file App.s
    Uses
-      At line 44 in file App.s
-      At line 50 in file App.s
-      At line 71 in file App.s
-      At line 76 in file App.s
+      At line 45 in file App.s
+      At line 51 in file App.s
+      At line 72 in file App.s
+      At line 77 in file App.s
 
 fin 00000170
 
 Symbol: fin
    Definitions
-      At line 159 in file App.s
+      At line 160 in file App.s
    Uses
-      At line 142 in file App.s
+      At line 143 in file App.s
 Comment: fin used once
 finDiff 0000016C
 
 Symbol: finDiff
+   Definitions
+      At line 158 in file App.s
+   Uses
+      At line 141 in file App.s
+Comment: finDiff used once
+flash 000000B8
+
+Symbol: flash
    Definitions
 
 
@@ -445,32 +446,24 @@ Symbol: finDiff
 ARM Macro Assembler    Page 4 Alphabetic symbol ordering
 Relocatable symbols
 
-      At line 157 in file App.s
+      At line 95 in file App.s
    Uses
-      At line 140 in file App.s
-Comment: finDiff used once
-flash 000000B8
-
-Symbol: flash
-   Definitions
-      At line 94 in file App.s
-   Uses
-      At line 28 in file App.s
-      At line 81 in file App.s
+      At line 29 in file App.s
+      At line 82 in file App.s
 
 floop 000000DC
 
 Symbol: floop
    Definitions
-      At line 108 in file App.s
+      At line 109 in file App.s
    Uses
-      At line 117 in file App.s
+      At line 118 in file App.s
 Comment: floop used once
 fs 000000D8
 
 Symbol: fs
    Definitions
-      At line 107 in file App.s
+      At line 108 in file App.s
    Uses
       None
 Comment: fs unused
@@ -480,47 +473,54 @@ Symbol: ini
    Definitions
       At line 21 in file App.s
    Uses
-      At line 35 in file App.s
-      At line 74 in file App.s
-
+      At line 75 in file App.s
+Comment: ini used once
 inic 00000004
 
 Symbol: inic
    Definitions
       At line 23 in file App.s
    Uses
-      At line 38 in file App.s
+      At line 39 in file App.s
 Comment: inic used once
 loop 00000018
 
 Symbol: loop
    Definitions
-      At line 29 in file App.s
+      At line 30 in file App.s
    Uses
-      At line 82 in file App.s
+      At line 83 in file App.s
 Comment: loop used once
 nset 000000FC
 
 Symbol: nset
    Definitions
-      At line 116 in file App.s
+      At line 117 in file App.s
+   Uses
+      At line 115 in file App.s
+Comment: nset used once
+plus 00000074
+
+Symbol: plus
+   Definitions
+      At line 61 in file App.s
+   Uses
 
 
 
 ARM Macro Assembler    Page 5 Alphabetic symbol ordering
 Relocatable symbols
 
-   Uses
-      At line 114 in file App.s
-Comment: nset used once
-plus 00000074
-
-Symbol: plus
-   Definitions
-      At line 60 in file App.s
-   Uses
-      At line 54 in file App.s
+      At line 55 in file App.s
 Comment: plus used once
+reset 00000000
+
+Symbol: reset
+   Definitions
+      At line 1 in file App.s
+   Uses
+      None
+Comment: reset unused
 start 00000000
 
 Symbol: start
@@ -528,28 +528,29 @@ Symbol: start
       At line 10 in file App.s
    Uses
       At line 9 in file App.s
-Comment: start used once
+      At line 36 in file App.s
+
 stop 000000B4
 
 Symbol: stop
    Definitions
-      At line 83 in file App.s
+      At line 84 in file App.s
    Uses
-      At line 83 in file App.s
+      At line 84 in file App.s
 Comment: stop used once
 subtract 0000005C
 
 Symbol: subtract
    Definitions
-      At line 52 in file App.s
+      At line 53 in file App.s
    Uses
-      At line 47 in file App.s
+      At line 48 in file App.s
 Comment: subtract used once
 wait 00000154
 
 Symbol: wait
    Definitions
-      At line 148 in file App.s
+      At line 149 in file App.s
    Uses
       None
 Comment: wait unused
@@ -557,9 +558,9 @@ waitl 00000158
 
 Symbol: waitl
    Definitions
-      At line 149 in file App.s
-   Uses
       At line 150 in file App.s
+   Uses
+      At line 151 in file App.s
 Comment: waitl used once
 35 symbols
 
@@ -574,7 +575,7 @@ Symbol: IO1CLR
    Definitions
       At line 13 in file App.s
    Uses
-      At line 100 in file App.s
+      At line 101 in file App.s
 Comment: IO1CLR used once
 IO1DIR E0028018
 
@@ -582,7 +583,7 @@ Symbol: IO1DIR
    Definitions
       At line 11 in file App.s
    Uses
-      At line 95 in file App.s
+      At line 96 in file App.s
 Comment: IO1DIR used once
 IO1PIN E0028010
 
@@ -590,7 +591,7 @@ Symbol: IO1PIN
    Definitions
       At line 14 in file App.s
    Uses
-      At line 125 in file App.s
+      At line 126 in file App.s
 Comment: IO1PIN used once
 IO1SET E0028014
 
@@ -598,22 +599,7 @@ Symbol: IO1SET
    Definitions
       At line 12 in file App.s
    Uses
-      At line 98 in file App.s
+      At line 99 in file App.s
 Comment: IO1SET used once
 4 symbols
-
-
-
-ARM Macro Assembler    Page 1 Alphabetic symbol ordering
-External symbols
-
-main 00000000
-
-Symbol: main
-   Definitions
-      At line 4 in file App.s
-   Uses
-      None
-Comment: main unused
-1 symbol
-375 symbols in table
+374 symbols in table
