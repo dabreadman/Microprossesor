@@ -1,6 +1,6 @@
-		;AREA	reset, CODE, READONLY
+;	AREA	reset, CODE, READONLY
+	
 	AREA	AsmTemplate, CODE, READONLY
-
 	IMPORT	main
 
 ; sample program makes the 4 LEDs P1.16, P1.17, P1.18, P1.19 go on and off in sequence
@@ -23,6 +23,9 @@ ini
 inic
 		ldr r5,=0	; cur 
 		ldr r6,=1	; operator
+		ldr r7,=0	; temp 
+		ldr r0,=0
+		bl flash
 loop	
 		bl button	; get input
 		
@@ -37,42 +40,44 @@ bn21	cmp r0,#-21	; if long P21 clear last
 b22		cmp r0,#22	; if P22 n-
 		bne	b23
 		sub r5,r5,#1	; n-
-		b numEnd
+		mov r7,r5	; get cur into r0 for display
+		b endloop
 		
 b23		cmp r0,#23		; if P23 n+
-		bne b20
+		bne subtract
 		add r5,r5,#1	; n+
-		b numEnd
+		mov r7,r5	; get cur into r0 for display
+		b endloop
 		
-substract
+subtract
 		cmp r6,#2		; if P20 -
 		bne plus
 		sub r4,r4,r5	; sum-=cur
-		mov r0,r4		; mov for display
+		mov r7,r4		; mov for display
 		ldr r5,=0		; clear cur
+		b b20
 
 plus
 		cmp r6,#1		; if P21 +
-		bne ini
+		bne b20
 		add r4,r4,r5	; sum+=cur
-		mov r0,r4		; mov for display
+		mov r7,r4		; mov for display
 		ldr r5,=0		; clear cur
 		
 b20
 		cmp r0,#20		; if P20 -
 		bne b21
 		ldr r6,=2		; set op = -
+		b endloop
 b21
 		cmp r0,#21		; if P21 +
 		bne ini
 		ldr r6,=1		; set op = +
-		
-		mov r0,r4		; mov for display
 		b endloop
 		
-numEnd
-	mov r0,r5	; get cur into r0 for display
+
 endloop
+	mov r0,r7
 	bl flash
 	b loop
 stop	B	stop
@@ -99,9 +104,6 @@ flash   PUSH {r3-r6,lr}
 	
 	ldr	r5,=0x000080000	; end when the mask reaches this value
 
-		cmp r0,#0
-		bne fs 
-		ldr r0,=0xf
 fs		ldr	r3,=0x000080000	; start with P1.16.
 floop	ldr r6,=0
 		cmp r0,#0
@@ -116,31 +118,13 @@ nset	mov r3,r3,lsr #1
 
 ds
 		POP {r3-r6,pc}
-		
-		
-;	wait subrotuine
-;	wait for a certain time
-;	parameter:
-;	R0: time to wait
-;	output: none
-		
-;wait 	ldr r0,=4000000
-;waitl	subs r0,r0,#1
-		;bne  waitl
-		;bx lr
-
-;
-;
-;
-;
-;
-
 
 button 
 	PUSH{r4-r5,LR}
 buttonIni
 	ldr r2,=IO1PIN	; get mem address
 	ldr r3,=0		; nothing
+	ldr r4,=0;
 buttonRead
 	ldr r0,[r2]	; get memory
 buttonGetBits
@@ -150,10 +134,13 @@ buttonGetBits
 	and r0,r1	; get bits
 	cmp r0,#0		; if has input
 	beq butNoIn
-	cmp r4,#0		; if already pressed
-	beq	butNew
-	cmp r3,r1		; if input same
+	cmp r4,#1		; if already pressed
+	ble	butNew
+	cmp r3,r0		; if input same
 	bne finDiff
+	ldr r4,=8
+	b fin
+	
 butNew
 	mov r3,r0		; store copy
 	add r4,r4,#1	; add counter
@@ -188,5 +175,7 @@ checklong
 	blt endBut
 	neg r0,r0
 endBut
+	cmp r0,#0
+	beq buttonIni
 	POP {r4-r5,PC}
 	END
